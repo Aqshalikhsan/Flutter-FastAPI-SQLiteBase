@@ -10,13 +10,7 @@ pipeline {
 
     stages {
 
-        stage('Checkout Repo') {
-            steps {
-                git 'https://github.com/Aqshalikhsan/Flutter-FastAPI-SQLiteBase.git'
-            }
-        }
-
-        stage('Build Flutter') {
+        stage('Build Flutter APK') {
             steps {
                 dir('register_system/backend/flutter_app') {
 
@@ -32,6 +26,13 @@ pipeline {
             steps {
                 archiveArtifacts artifacts: 'register_system/backend/flutter_app/build/app/outputs/flutter-apk/*.apk'
             }
+        }
+
+    }
+
+    post {
+        success {
+            echo 'Flutter APK build success'
         }
     }
 }
