@@ -1,0 +1,64 @@
+pipeline {
+    agent any
+
+    environment {
+        JAVA_HOME = "/usr/lib/jvm/java-17-openjdk-amd64"
+        ANDROID_HOME = "/var/lib/jenkins/Android/Sdk"
+        ANDROID_SDK_ROOT = "/var/lib/jenkins/Android/Sdk"
+        PATH = "${env.PATH}:${JAVA_HOME}/bin:${ANDROID_HOME}/platform-tools:${ANDROID_HOME}/cmdline-tools/latest/bin"
+    }
+
+    stages {
+
+        stage('Environment Check') {
+            steps {
+                sh 'echo "JAVA VERSION:"'
+                sh 'java -version'
+                sh 'echo "ANDROID SDK:"'
+                sh 'ls $ANDROID_HOME'
+                sh 'echo "FLUTTER VERSION:"'
+                sh 'flutter --version'
+            }
+        }
+
+        stage('Flutter Doctor') {
+            steps {
+                sh 'flutter doctor'
+            }
+        }
+
+        stage('Clean Project') {
+            steps {
+                sh 'flutter clean'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh 'flutter pub get'
+            }
+        }
+
+        stage('Build APK') {
+            steps {
+                sh 'flutter build apk --release'
+            }
+        }
+
+        stage('Archive APK') {
+            steps {
+                archiveArtifacts artifacts: 'build/app/outputs/flutter-apk/*.apk', fingerprint: true
+            }
+        }
+
+    }
+
+    post {
+        success {
+            echo 'Build APK works'
+        }
+        failure {
+            echo 'Build gagal failure'
+        }
+    }
+}
