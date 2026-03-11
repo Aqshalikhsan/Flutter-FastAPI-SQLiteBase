@@ -10,55 +10,29 @@ pipeline {
 
     stages {
 
-        stage('Environment Check') {
+        stage('Checkout') {
             steps {
-                sh 'echo "JAVA VERSION:"'
-                sh 'java -version'
-                sh 'echo "ANDROID SDK:"'
-                sh 'ls $ANDROID_HOME'
-                sh 'echo "FLUTTER VERSION:"'
-                sh 'flutter --version'
+                git 'https://github.com/Aqshalikhsan/Flutter-FastAPI-SQLiteBase.git'
             }
         }
 
-        stage('Flutter Doctor') {
+        stage('Build Flutter') {
             steps {
-                sh 'flutter doctor'
-            }
-        }
+                dir('register_system/backend/flutter_app') {
 
-        stage('Clean Project') {
-            steps {
-                sh 'flutter clean'
-            }
-        }
+                    sh 'flutter clean'
+                    sh 'flutter pub get'
+                    sh 'flutter build apk --release'
 
-        stage('Install Dependencies') {
-            steps {
-                sh 'flutter pub get'
-            }
-        }
-
-        stage('Build APK') {
-            steps {
-                sh 'flutter build apk --release'
+                }
             }
         }
 
         stage('Archive APK') {
             steps {
-                archiveArtifacts artifacts: 'build/app/outputs/flutter-apk/*.apk', fingerprint: true
+                archiveArtifacts artifacts: 'register_system/backend/flutter_app/build/app/outputs/flutter-apk/*.apk'
             }
         }
 
-    }
-
-    post {
-        success {
-            echo 'Build APK works'
-        }
-        failure {
-            echo 'Build gagal failure'
-        }
     }
 }
