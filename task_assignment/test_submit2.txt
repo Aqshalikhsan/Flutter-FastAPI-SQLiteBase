@@ -1,0 +1,66 @@
+import 'package:flutter/material.dart';
+
+void main () {
+runApp(MyApp());
+
+}
+
+class MyApp extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Fitur Text Field'),
+        ),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: TextField(
+              showCursor: true,
+              cursorColor: Colors.amber,
+              //cursorWidth: 10,
+              //cursorHeight: 25,
+              //cursorRadius: Radius.circular(20),
+
+              //textAlign: TextAlign.start,
+              //textAlignVertical: TextAlignVertical.center,
+              //textCapitalization: TextCapitalization.none,
+
+              style: TextStyle(color: Colors.red,
+              fontSize: 19,
+              ),
+              //obscureText: true,
+
+              //decoration: InputDecoration(
+                //icon: Icon(
+                  //Icons.person,
+                  //size: 35,
+                // ),
+                 //border: OutlineInputBorder(),
+
+
+                 //prefixText: "Name : ",
+                 //suffix: Icon(Icons.remove_red_eye),
+                 //suffix: IconButton(
+                 //icon: Icon(Icons.remove_red_eye),
+                 //onPressed: () {},
+                 //),
+
+
+                 //hintText: " please input your name ",
+                 //hintStyle: TextStyle(
+                  //color : Colors.red,
+                  //fontSize: 20,
+                 //),
+                 //labelText: "Full Name",
+              //),
+              ), 
+              ),
+              ),
+
+      ),
+    );
+  }
+}
