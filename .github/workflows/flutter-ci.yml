@@ -26,25 +26,28 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: stable
+          # Menggunakan versi spesifik lebih aman daripada 'stable' saja
+          flutter-version: '3.22.0' 
+          channel: 'stable'
           cache: true
 
       - name: Verify Environment
         run: |
           java -version
           flutter --version
-          flutter doctor -v
 
       - name: Cache Pub
         uses: actions/cache@v4
         with:
           path: ~/.pub-cache
-          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
+          # Mengubah key ke 'v2' untuk mereset cache yang bermasalah
+          key: ${{ runner.os }}-pub-v2-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pub-v2-
 
       - name: Build APK
         working-directory: register_system/backend/flutter_app
         run: |
-          flutter clean
           flutter pub get
           flutter analyze
           flutter build apk --release
