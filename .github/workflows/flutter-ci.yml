@@ -39,7 +39,6 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.pub-cache
-          # Mengubah key ke 'v2' untuk mereset cache yang bermasalah
           key: ${{ runner.os }}-pub-v2-${{ hashFiles('**/pubspec.lock') }}
           restore-keys: |
             ${{ runner.os }}-pub-v2-
