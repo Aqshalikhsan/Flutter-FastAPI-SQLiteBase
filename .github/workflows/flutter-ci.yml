@@ -1,61 +1,59 @@
 name: Flutter CI/CD
 
 on:
-push:
-branches: ["main"]
-pull_request:
-branches: ["main"]
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
 
 jobs:
-build:
-runs-on: ubuntu-latest
+  build:
+    runs-on: ubuntu-latest
 
-```
-env:
-  JAVA_HOME: /usr/lib/jvm/java-17-openjdk-amd64
+    env:
+      JAVA_HOME: /usr/lib/jvm/java-17-openjdk-amd64
 
-steps:
-  - name: Checkout Repository
-    uses: actions/checkout@v4
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-  - name: Setup Java 17
-    uses: actions/setup-java@v4
-    with:
-      distribution: temurin
-      java-version: '17'
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
 
-  - name: Setup Flutter
-    uses: subosito/flutter-action@v2
-    with:
-      flutter-version: stable
-      cache: true
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: stable
+          cache: true
 
-  - name: Verify Environment
-    run: |
-      java -version
-      flutter --version
-      flutter doctor -v
+      - name: Verify Environment
+        run: |
+          java -version
+          flutter --version
+          flutter doctor -v
 
-  - name: Cache Pub
-    uses: actions/cache@v4
-    with:
-      path: ~/.pub-cache
-      key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
+      - name: Cache Pub
+        uses: actions/cache@v4
+        with:
+          path: ~/.pub-cache
+          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
 
-  - name: Build APK
-    working-directory: register_system/backend/flutter_app
-    run: |
-      flutter clean
-      flutter pub get
-      flutter analyze
-      flutter build apk --release
+      - name: Build APK
+        working-directory: register_system/backend/flutter_app
+        run: |
+          flutter clean
+          flutter pub get
+          flutter analyze
+          flutter build apk --release
 
-  - name: Check APK
-    run: ls -lah register_system/backend/flutter_app/build/app/outputs/flutter-apk/
+      - name: Check APK
+        run: ls -lah register_system/backend/flutter_app/build/app/outputs/flutter-apk/
 
-  - name: Upload APK
-    uses: actions/upload-artifact@v4
-    with:
-      name: flutter-apk
-      path: register_system/backend/flutter_app/build/app/outputs/flutter-apk/*.apk
-```
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: flutter-apk
+          path: register_system/backend/flutter_app/build/app/outputs/flutter-apk/*.apk
