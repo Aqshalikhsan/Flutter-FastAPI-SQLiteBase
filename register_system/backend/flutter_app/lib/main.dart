@@ -1,120 +1,65 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: RegisterPage(), debugShowCheckedModeBanner: false);
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: const MyHomePage(),
+    );
   }
 }
 
-class RegisterPage extends StatefulWidget {
+class MyHomePage extends StatefulWidget {
+  
+  const MyHomePage({super.key});
+
   @override
-  _RegisterPageState createState() => _RegisterPageState();
+  
+  State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
-  TextEditingController username = TextEditingController();
-  TextEditingController email = TextEditingController();
-  TextEditingController password = TextEditingController();
+class _MyHomePageState extends State<MyHomePage> {
+  void fetchData() async {
+    try {
+      final response = await http.get(Uri.parse('https://example.com'));
+      
+      
+      debugPrint('Status: ${response.statusCode}');
+      debugPrint('Body: ${response.body}');
 
-  Future registerUser() async {
-    var url = Uri.parse("http://127.0.0.1:8000/register");
-
-    var response = await http.post(
-      url,
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode({
-        "username": username.text,
-        "email": email.text,
-        "password": password.text,
-      }),
-    );
-
-    print("STATUS: ${response.statusCode}");
-    print("BODY: ${response.body}");
-
-    if (response.statusCode == 200) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Register Success")));
-    } else {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Register Failed")));
+      
+      if (!mounted) return;
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Berhasil mengambil data')),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      debugPrint(e.toString());
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Register")),
-
-      body: Center(
-        child: Container(
-          width: 350,
-
-          child: Padding(
-            padding: EdgeInsets.all(20),
-
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-
-              children: [
-                Text(
-                  "Register User",
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-
-                SizedBox(height: 20),
-
-                TextField(
-                  controller: username,
-                  decoration: InputDecoration(
-                    labelText: "Username",
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-
-                SizedBox(height: 15),
-
-                TextField(
-                  controller: email,
-                  decoration: InputDecoration(
-                    labelText: "Email",
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-
-                SizedBox(height: 15),
-
-                TextField(
-                  controller: password,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    labelText: "Password",
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-
-                SizedBox(height: 20),
-
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: registerUser,
-                    child: Text("Register"),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
+      appBar: AppBar(title: const Text('Home')),
+      body: Column(
+        children: [
+          const Text('Hello World'),
+          
+          const SizedBox(height: 10), 
+          ElevatedButton(onPressed: fetchData, child: const Text('Fetch')),
+        ],
       ),
     );
   }
